@@ -10,39 +10,72 @@ jobs:
     container:
       image: mhmmdfdlyas/dockerfile:k-ubuntu
 
+    env:
+      ARCH: arm64
+      SUBARCH: arm64
+
     steps:
       - name: Clone Kernel Source
         run: |
           git clone --depth=1 https://github.com/bengal-upstream/kernel_xiaomi_sm8250.git -b qcom_sm8250 kernel
-          cd kernel
 
       - name: Restore ccache
         uses: actions/cache@v4
         with:
           path: ~/.ccache
-          key: ccache-${{ github.run_id }}
+          key: ccache-${{ github.repository }}
+          restore-keys: |
+            ccache-
 
-      - name: Clone AOSP Clang
+      - name: Restore Clang Cache
+        id: clang-cache
+        uses: actions/cache@v4
+        with:
+          path: clang
+          key: aosp-clang-r584948b
+
+      - name: Download AOSP Clang
+        if: steps.clang-cache.outputs.cache-hit != 'true'
         run: |
-          git clone --depth=1 \
-            https://android.googlesource.com/platform/prebuilts/clang/host/linux-x86 clang
+          mkdir clang
+          cd clang
+
+          wget -q \
+            https://android.googlesource.com/platform/prebuilts/clang/host/linux-x86/+archive/refs/heads/main/clang-r584948b.tar.gz \
+            -O clang.tar.gz
+
+          tar -xzf clang.tar.gz
+          rm -f clang.tar.gz
+
+      - name: Show Clang Version
+        run: |
+          export PATH="$PWD/clang/bin:$PATH"
+          clang --version
+
+      - name: Configure Kernel
+        run: |
+          export PATH="$PWD/clang/bin:$PATH"
+
+          cd kernel
+          make O=out vendor/bengal-perf_defconfig
 
       - name: Build Kernel
         run: |
-          export ARCH=arm64
-          export SUBARCH=arm64
-
-          export CLANG_DIR=$(find clang -maxdepth 1 -type d -name 'clang-r*' | sort -V | tail -n1)
-          export PATH=$PWD/$CLANG_DIR/bin:$PATH
+          export PATH="$PWD/clang/bin:$PATH"
 
           cd kernel
-
-          make O=out vendor/bengal-perf_defconfig
 
           make -j$(nproc) \
             O=out \
             LLVM=1 \
-            LLVM_IAS=1
+            LLVM_IAS=1 \
+            CC=clang \
+            LD=ld.lld \
+            AR=llvm-ar \
+            NM=llvm-nm \
+            STRIP=llvm-strip \
+            OBJCOPY=llvm-objcopy \
+            OBJDUMP=llvm-objdump
 
       - name: Upload Artifacts
         uses: actions/upload-artifact@v4
