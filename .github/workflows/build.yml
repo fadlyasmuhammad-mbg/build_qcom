@@ -17,71 +17,55 @@ jobs:
     steps:
       - name: Clone Kernel Source
         run: |
-          git clone --depth=1 https://github.com/bengal-upstream/kernel_xiaomi_sm8250.git -b qcom_sm8250 kernel
+          git clone --depth=1 \
+            -b qcom_sm8250 \
+            https://github.com/bengal-upstream/kernel_xiaomi_sm8250.git \
+            kernel
 
-      - name: Restore ccache
+      - name: Cache ccache
         uses: actions/cache@v4
         with:
           path: ~/.ccache
-          key: ccache-${{ github.repository }}
+          key: ccache-${{ github.run_id }}
           restore-keys: |
             ccache-
 
-      - name: Restore Clang Cache
-        id: clang-cache
-        uses: actions/cache@v4
-        with:
-          path: clang
-          key: aosp-clang-r584948b
-
-      - name: Download AOSP Clang
-        if: steps.clang-cache.outputs.cache-hit != 'true'
+      - name: Clone AOSP Clang
         run: |
-          mkdir clang
-          cd clang
+          git clone --depth=1 \
+            https://android.googlesource.com/platform/prebuilts/clang/host/linux-x86.git \
+            clang
 
-          wget -q \
-            https://android.googlesource.com/platform/prebuilts/clang/host/linux-x86/+archive/refs/heads/main/clang-r584948b.tar.gz \
-            -O clang.tar.gz
-
-          tar -xzf clang.tar.gz
-          rm -f clang.tar.gz
+      - name: Detect Latest Clang
+        run: |
+          CLANG_DIR=$(find clang -maxdepth 1 -type d -name "clang-r*" | sort -V | tail -n1)
+          echo "CLANG_DIR=$CLANG_DIR" >> $GITHUB_ENV
 
       - name: Show Clang Version
         run: |
-          export PATH="$PWD/clang/bin:$PATH"
+          export PATH="$PWD/$CLANG_DIR/bin:$PATH"
           clang --version
 
       - name: Configure Kernel
         run: |
-          export PATH="$PWD/clang/bin:$PATH"
+          export PATH="$PWD/$CLANG_DIR/bin:$PATH"
 
           cd kernel
+
           make O=out vendor/bengal-perf_defconfig
 
       - name: Build Kernel
         run: |
-          export PATH="$PWD/clang/bin:$PATH"
+          export PATH="$PWD/$CLANG_DIR/bin:$PATH"
 
           cd kernel
 
-          make -j$(nproc) \
+          make -j$(nproc --all) \
             O=out \
             LLVM=1 \
-            LLVM_IAS=1 \
-            CC=clang \
-            LD=ld.lld \
-            AR=llvm-ar \
-            NM=llvm-nm \
-            STRIP=llvm-strip \
-            OBJCOPY=llvm-objcopy \
-            OBJDUMP=llvm-objdump
+            LLVM_IAS=1
 
-      - name: Upload Artifacts
+      - name: Upload Artifact
         uses: actions/upload-artifact@v4
         with:
           name: kernel
-          compression-level: 0
-          if-no-files-found: warn
-          path: |
-            kernel/out/arch/arm64/boot/**
