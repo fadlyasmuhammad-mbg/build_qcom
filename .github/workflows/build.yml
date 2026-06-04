@@ -11,31 +11,10 @@ jobs:
       image: mhmmdfdlyas/dockerfile:k-ubuntu
 
     steps:
+      - uses: actions/checkout@v4
+
       - name: Build
-        run: |
-          git clone --depth=1 -b qcom_sm8250 \
-            https://github.com/bengal-upstream/kernel_xiaomi_sm8250.git kernel
-
-          clang_dir="$(pwd)/greenforce-clang"
-          clang_url="https://github.com/greenforce-project/greenforce_clang/releases/download/20260601/gf-clang-10.0.1-20260601.tar.gz"
-
-          mkdir -p "${clang_dir}"
-          wget -O - "${clang_url}" | tar -xz -C "${clang_dir}"
-
-          export PATH="${clang_dir}/bin:$PATH"
-          export ARCH=arm64
-          export SUBARCH=arm64
-
-          clang --version
-
-          cd kernel
-
-          make O=out ARCH=arm64 vendor/bengal-perf_defconfig
-
-          make -j$(nproc --all) \
-            O=out \
-            LLVM=1 \
-            LLVM_IAS=1
+        run: bash build.sh
 
       - name: Upload Artifact
         uses: actions/upload-artifact@v4
