@@ -16,18 +16,8 @@ jobs:
           git clone --depth=1 -b qcom_sm8250 \
             https://github.com/bengal-upstream/kernel_xiaomi_sm8250.git kernel
 
-          mkdir clang
-          cd clang
-
-          curl -LO https://github.com/Neutron-Toolchains/clang-build-catalogue/releases/latest/download/antman-clang.tar.zst
-
-          tar --zstd -xf antman-clang.tar.zst
-
-          cd ..
-
           export ARCH=arm64
           export SUBARCH=arm64
-          export PATH=$PWD/clang/bin:$PATH
 
           clang --version
 
@@ -46,5 +36,4 @@ jobs:
           name: kernel
           compression-level: 0
           if-no-files-found: warn
-          path: |
-            kernel/out/arch/arm64/boot/**
+          path: kernel/out/arch/arm64/boot/**
