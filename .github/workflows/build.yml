@@ -30,19 +30,12 @@ jobs:
 
           cd kernel
 
-          make O=out vendor/bengal-perf_defconfig
+          make O=out ARCH=arm64 vendor/bengal-perf_defconfig
 
           make -j$(nproc --all) \
             O=out \
             LLVM=1 \
-            LLVM_IAS=1 \
-            CC=clang \
-            LD=ld.lld \
-            AR=llvm-ar \
-            NM=llvm-nm \
-            STRIP=llvm-strip \
-            OBJCOPY=llvm-objcopy \
-            OBJDUMP=llvm-objdump
+            LLVM_IAS=1
 
       - name: Upload Artifact
         uses: actions/upload-artifact@v4
