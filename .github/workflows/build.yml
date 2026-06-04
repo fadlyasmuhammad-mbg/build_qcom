@@ -16,6 +16,13 @@ jobs:
           git clone --depth=1 -b qcom_sm8250 \
             https://github.com/bengal-upstream/kernel_xiaomi_sm8250.git kernel
 
+          clang_dir="$(pwd)/greenforce-clang"
+          clang_url="https://github.com/greenforce-project/greenforce_clang/releases/download/20260601/gf-clang-10.0.1-20260601.tar.gz"
+
+          mkdir -p "${clang_dir}"
+          wget -O - "${clang_url}" | tar -xz -C "${clang_dir}"
+
+          export PATH="${clang_dir}/bin:$PATH"
           export ARCH=arm64
           export SUBARCH=arm64
 
@@ -28,7 +35,14 @@ jobs:
           make -j$(nproc --all) \
             O=out \
             LLVM=1 \
-            LLVM_IAS=1
+            LLVM_IAS=1 \
+            CC=clang \
+            LD=ld.lld \
+            AR=llvm-ar \
+            NM=llvm-nm \
+            STRIP=llvm-strip \
+            OBJCOPY=llvm-objcopy \
+            OBJDUMP=llvm-objdump
 
       - name: Upload Artifact
         uses: actions/upload-artifact@v4
