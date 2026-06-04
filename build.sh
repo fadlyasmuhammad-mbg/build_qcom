@@ -4,15 +4,15 @@ git clone --depth=1 \
   -b qcom_sm8250 \
   https://github.com/bengal-upstream/kernel_xiaomi_sm8250.git \
   kernel
+  
+git clone --depth=1 \
+  https://android.googlesource.com/platform/prebuilts/clang/host/linux-x86 \
+  clang
+  
+CLANG_DIR=$(find clang -maxdepth 1 -type d -name "clang-r*" | sort -V | tail -n1)
 
-clang_dir="$(pwd)/greenforce-clang"
-clang_url="https://github.com/greenforce-project/greenforce_clang/releases/download/20260601/gf-clang-10.0.1-20260601.tar.gz"
+export PATH="$(pwd)/$CLANG_DIR/bin:$PATH"
 
-mkdir -p "${clang_dir}"
-
-wget -O - "${clang_url}" | tar -xz -C "${clang_dir}"
-
-export PATH="${clang_dir}/bin:$PATH"
 export BUILD_ARGS="LLVM=1 LLVM_IAS=1"
 
 echo "=== Compiler ==="
