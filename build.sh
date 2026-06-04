@@ -10,7 +10,7 @@ clang_dir="$(pwd)/clang"
 
 mkdir -p "$clang_dir"
 
-clang_url="https://android.googlesource.com/platform/prebuilts/clang/host/linux-x86/+archive/9c58a6fe9b3a84143a3ebd54f9e59328be769f5a/clang-r596125.tar.gz"
+clang_url="https://android.googlesource.com/platform/prebuilts/clang/host/linux-x86/+archive/refs/tags/android-12.0.0_r12/clang-r416183b1.tar.gz"
 
 echo "Downloading AOSP Clang..."
 
@@ -20,7 +20,7 @@ curl -L "$clang_url" | tar -xz -C "$clang_dir"
 export CLANG_DIR=$(find "$clang_dir" -maxdepth 1 -type d -name "clang*" | head -n1)
 
 export PATH="$CLANG_DIR/bin:$PATH"
-export BUILD_ARGS="LLVM=1 LLVM_IAS=1"
+export BUILD_ARGS="AS=as CC=clang CROSS_COMPILE=aarch64-linux-gnu-"
 
 echo "=== Compiler ==="
 clang --version
