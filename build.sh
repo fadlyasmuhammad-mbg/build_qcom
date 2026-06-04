@@ -35,6 +35,18 @@ make -j"$(nproc --all)" \
      ${BUILD_ARGS} \
      vendor/bengal-perf_defconfig
 
+scripts/config \
+    --file out/.config \
+    -d BUILD_ARM64_DT_OVERLAY
+
+make -j"$(nproc --all)" \
+     -l"$(nproc --all)" \
+     -C $(pwd) \
+     O=out \
+     ARCH=arm64 \
+     ${BUILD_ARGS} \
+     olddefconfig
+
 make -j"$(nproc --all)" \
      -l"$(nproc --all)" \
      -C $(pwd) \
