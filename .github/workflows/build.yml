@@ -10,55 +10,30 @@ jobs:
     container:
       image: mhmmdfdlyas/dockerfile:k-ubuntu
 
-    env:
-      ARCH: arm64
-      SUBARCH: arm64
-
     steps:
-      - name: Clone Kernel Source
+      - name: Build
         run: |
-          git clone --depth=1 \
-            -b qcom_sm8250 \
-            https://github.com/bengal-upstream/kernel_xiaomi_sm8250.git \
-            kernel
+          git clone --depth=1 -b qcom_sm8250 \
+            https://github.com/bengal-upstream/kernel_xiaomi_sm8250.git kernel
 
-      - name: Cache ccache
-        uses: actions/cache@v4
-        with:
-          path: ~/.ccache
-          key: ccache-${{ github.run_id }}
-          restore-keys: |
-            ccache-
+          mkdir clang
+          cd clang
 
-      - name: Clone AOSP Clang
-        run: |
-          git clone --depth=1 \
-            https://android.googlesource.com/platform/prebuilts/clang/host/linux-x86.git \
-            clang
+          curl -LO https://github.com/Neutron-Toolchains/clang-build-catalogue/releases/latest/download/antman-clang.tar.zst
 
-      - name: Detect Latest Clang
-        run: |
-          CLANG_DIR=$(find clang -maxdepth 1 -type d -name "clang-r*" | sort -V | tail -n1)
-          echo "CLANG_DIR=$CLANG_DIR" >> $GITHUB_ENV
+          tar --zstd -xf antman-clang.tar.zst
 
-      - name: Show Clang Version
-        run: |
-          export PATH="$PWD/$CLANG_DIR/bin:$PATH"
+          cd ..
+
+          export ARCH=arm64
+          export SUBARCH=arm64
+          export PATH=$PWD/clang/bin:$PATH
+
           clang --version
-
-      - name: Configure Kernel
-        run: |
-          export PATH="$PWD/$CLANG_DIR/bin:$PATH"
 
           cd kernel
 
           make O=out vendor/bengal-perf_defconfig
-
-      - name: Build Kernel
-        run: |
-          export PATH="$PWD/$CLANG_DIR/bin:$PATH"
-
-          cd kernel
 
           make -j$(nproc --all) \
             O=out \
@@ -69,3 +44,7 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: kernel
+          compression-level: 0
+          if-no-files-found: warn
+          path: |
+            kernel/out/arch/arm64/boot/**
