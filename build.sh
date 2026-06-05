@@ -10,9 +10,9 @@ clang_dir="$(pwd)/clang"
 
 mkdir -p "$clang_dir"
 
-clang_url="https://android.googlesource.com/platform/prebuilts/clang/host/linux-x86/+archive/refs/tags/android-12.0.0_r12/clang-r416183b1.tar.gz"
+clang_url="https://github.com/greenforce-project/greenforce_clang/releases/download/20260531/gf-clang-22.1.7-20260531.tar.gz"
 
-echo "Downloading AOSP Clang..."
+echo "Downloading Gf Clang.."
 
 curl -L "$clang_url" | tar -xz -C "$clang_dir"
 
