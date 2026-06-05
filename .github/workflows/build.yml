@@ -22,5 +22,5 @@ jobs:
           compression-level: 0
           if-no-files-found: warn
           path: |
-            kernel/out/arch/arm64/boot/**
+            kernel/out/arch/arm64/boot/Image
             kernel/build.log
