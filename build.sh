@@ -8,7 +8,7 @@ git clone --depth=1 \
 # setup clang
 bash <(wget -qO- https://raw.githubusercontent.com/greenforce-project/greenforce_clang/refs/heads/main/get_clang.sh)
 export PATH="$(pwd)/greenforce-clang/bin:$PATH"
-export BUILD_ARGS="LLVM=1 LLVM_IAS=0"
+export BUILD_ARGS="LLVM=1 LLVM_IAS=1"
 
 echo "=== Compiler ==="
 clang --version
