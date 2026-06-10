@@ -6,21 +6,9 @@ git clone --depth=1 \
   kernel
   
 # setup clang
-clang_dir="$(pwd)/clang"
-
-mkdir -p "$clang_dir"
-
-clang_url="https://github.com/greenforce-project/greenforce_clang/releases/download/20260531/gf-clang-22.1.7-20260531.tar.gz"
-
-echo "Downloading Gf Clang.."
-
-curl -L "$clang_url" | tar -xz -C "$clang_dir"
-
-# detect folder hasil extract
-export CLANG_DIR=$(find "$clang_dir" -maxdepth 1 -type d -name "clang*" | head -n1)
-
-export PATH="$CLANG_DIR/bin:$PATH"
-export BUILD_ARGS="AS=as CC=clang CROSS_COMPILE=aarch64-linux-gnu-"
+bash <(wget -qO- https://raw.githubusercontent.com/greenforce-project/greenforce_clang/refs/heads/main/get_clang.sh)
+export PATH="$(pwd)/greenforce-clang/bin:$PATH"
+export BUILD_ARGS="LLVM=1 LLVM_IAS=0"
 
 echo "=== Compiler ==="
 clang --version
