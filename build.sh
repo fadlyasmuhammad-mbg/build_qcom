@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 git clone --depth=1 \
-  -b qcom_sm6115-rt \
+  -b qcom_sm8250 \
   https://github.com/bengal-upstream/kernel_xiaomi_sm8250 \
   kernel
   
