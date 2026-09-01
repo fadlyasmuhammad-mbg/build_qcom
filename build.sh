@@ -1,13 +1,13 @@
 #!/usr/bin/env bash
 
 git clone --depth=1 \
-  -b preempt-rt \
+  -b qcom_sm8250 \
   https://github.com/greenforce-project/kernel_xiaomi_citrus_sm6115 \
   kernel
   
 # setup clang
-#bash <(wget -qO- https://raw.githubusercontent.com/greenforce-project/greenforce_clang/refs/heads/main/get_clang.sh)
-#export PATH="$(pwd)/greenforce-clang/bin:$PATH"
+bash <(wget -qO- https://raw.githubusercontent.com/greenforce-project/greenforce_clang/refs/heads/main/get_clang.sh)
+export PATH="$(pwd)/greenforce-clang/bin:$PATH"
 export BUILD_ARGS="LLVM=1 LLVM_IAS=1"
 
 echo "=== Compiler ==="
