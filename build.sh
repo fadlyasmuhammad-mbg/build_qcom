@@ -2,7 +2,7 @@
 
 git clone --depth=1 \
   -b qcom_sm8250 \
-  https://github.com/greenforce-project/kernel_xiaomi_citrus_sm6115 \
+  https://github.com/bengal-upstream/kernel_xiaomi_sm8250 \
   kernel
   
 # setup clang
