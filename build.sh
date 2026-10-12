@@ -6,7 +6,7 @@ git clone --depth=1 \
   kernel
   
 # setup clang
-bash <(wget -qO- https://raw.githubusercontent.com/greenforce-project/greenforce_clang/refs/heads/main/get_clang.sh)
+#bash <(wget -qO- https://raw.githubusercontent.com/greenforce-project/greenforce_clang/refs/heads/main/get_clang.sh)
 export PATH="$(pwd)/greenforce-clang/bin:$PATH"
 export BUILD_ARGS="CC=clang CROSS_COMPILE=aarch64-linux-gnu-"
 
