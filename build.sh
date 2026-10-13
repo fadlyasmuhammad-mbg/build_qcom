@@ -2,7 +2,7 @@
 
 git clone --depth=1 \
   -b android-4.19-cip \
-  https://github.com/greenforce-project/kernel_xiaomi_citrus_sm6115 \
+  https://github.com/greenforce-project/kernel_xiaomi_spes_sm6225 \
   kernel
   
 # setup clang
