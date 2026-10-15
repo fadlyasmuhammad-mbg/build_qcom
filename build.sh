@@ -2,8 +2,8 @@
 set -eo pipefail
 
 git clone --depth=1 \
-  -b android-4.19-cip \
-  https://github.com/greenforce-project/kernel_xiaomi_spes_sm6225 \
+  -b sm6115 \
+  https://github.com/bengal-upstream/kernel_xiaomi_bengal \
   kernel
   
 # setup clang
