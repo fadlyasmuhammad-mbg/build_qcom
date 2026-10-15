@@ -13,19 +13,39 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Build Kernel
+      - name: Run Build Script
         run: |
           chmod +x build.sh
           ./build.sh
 
-      - name: Upload Artifacts
+      - name: Upload Kernel Image
         uses: actions/upload-artifact@v4
         with:
-          name: kernel-and-dtb
+          name: Kernel-Image
           compression-level: 0
           if-no-files-found: warn
-          path: |
-            kernel/out/arch/arm64/boot/Image
-            kernel/out/arch/arm64/boot/dtb.img
-            kernel/out/arch/arm64/boot/dtbo.img
-            kernel/build.log
+          path: kernel/out/arch/arm64/boot/Image
+
+      - name: Upload DTB
+        uses: actions/upload-artifact@v4
+        with:
+          name: DTB-File
+          compression-level: 0
+          if-no-files-found: warn
+          path: kernel/out/arch/arm64/boot/dtb.img
+
+      - name: Upload DTBO
+        uses: actions/upload-artifact@v4
+        with:
+          name: DTBO-File
+          compression-level: 0
+          if-no-files-found: warn
+          path: kernel/out/arch/arm64/boot/dtbo.img
+
+      - name: Upload Build Log
+        uses: actions/upload-artifact@v4
+        with:
+          name: Build-Log
+          compression-level: 0
+          if-no-files-found: warn
+          path: kernel/build.log
