@@ -1,4 +1,5 @@
 #!/usr/bin/env bash
+set -eo pipefail
 
 git clone --depth=1 \
   -b android-4.19-cip \
