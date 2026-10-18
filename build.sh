@@ -3,7 +3,7 @@ set -eo pipefail
 
 git clone --depth=1 \
   -b qti-perf \
-  https://github.com/greenforce-project/kernel_xiaomi_citrus_sm6115 \
+  https://github.com/greenforce-project/kernel_xiaomi_spes_sm6225 \
   kernel
   
 # setup clang
