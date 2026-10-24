@@ -32,7 +32,7 @@ jobs:
           name: DTB-File
           compression-level: 0
           if-no-files-found: warn
-          path: kernel/out/arch/arm64/boot/dtb.img
+          path: kernel/out/arch/arm64/boot/dtb
 
       - name: Upload DTBO
         uses: actions/upload-artifact@v4
