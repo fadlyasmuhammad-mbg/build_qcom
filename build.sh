@@ -27,6 +27,7 @@ make -j"$(nproc --all)" \
 scripts/config \
     --file out/.config \
     -d IKHEADERS
+    -d BUILD_ARM64_DT_OVERLAY
 
 make -j"$(nproc --all)" \
      -l"$(nproc --all)" \
