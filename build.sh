@@ -9,7 +9,7 @@ git clone --depth=1 \
 # setup clang
 bash <(wget -qO- https://raw.githubusercontent.com/greenforce-project/greenforce_clang/refs/heads/main/get_clang.sh)
 export PATH="$(pwd)/greenforce-clang/bin:$PATH"
-export BUILD_ARGS="CC=clang CROSS_COMPILE=aarch64-linux-gnu-"
+export BUILD_ARGS="CC=clang LLVM=1 LLVM_IAS=1 CROSS_COMPILE=aarch64-linux-gnu-"
 
 echo "=== Compiler ==="
 clang --version
@@ -46,4 +46,5 @@ make -j"$(nproc --all)" \
 
 
 ls out/arch/arm64/boot/
+ls out/qcom/arm64/boot/dts/vendor/qcom/
 sleep 10
