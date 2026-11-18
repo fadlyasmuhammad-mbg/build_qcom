@@ -46,5 +46,5 @@ make -j"$(nproc --all)" \
 
 
 ls out/arch/arm64/boot/
-ls out/qcom/arm64/boot/dts/vendor/qcom/
+ls out/arch/arm64/boot/dts/vendor/qcom/
 sleep 10
